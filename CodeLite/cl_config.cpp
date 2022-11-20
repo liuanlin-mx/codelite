@@ -275,7 +275,7 @@ void clConfig::Write(const wxString& name, bool value)
 
 bool clConfig::Read(const wxString& name, bool defaultValue)
 {
-#if CL_USE_NATIVEBOOK
+#if CL_USE_NATIVEBOOK && !CL_USE_AUINATIVEBOOK
     if(name == "UseCustomBaseColour")
         return false;
 #endif

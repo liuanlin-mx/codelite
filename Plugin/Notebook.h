@@ -29,8 +29,13 @@
 #include "cl_defs.h"
 #if CL_USE_NATIVEBOOK
 
+#if CL_USE_AUINATIVEBOOK
+#include "AuiNotebook.hpp"
+typedef clAuiNotebook Notebook;
+#else
 #include "GTKNotebook.hpp"
 typedef clGTKNotebook Notebook;
+#endif
 #else // !CL_USE_NATIVEBOOK
 
 #include "clGenericNotebook.hpp"

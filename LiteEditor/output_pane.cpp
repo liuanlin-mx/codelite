@@ -106,7 +106,7 @@ void OutputPane::CreateGUIControls()
     auto images = m_book->GetBitmaps();
     m_build_tab = new BuildTab(m_book);
     m_book->AddPage(m_build_tab, BUILD_WIN, true, images->Add(wxT("build")));
-    m_tabs.insert(std::make_pair(BUILD_WIN, Tab(BUILD_WIN, m_build_tab, wxNOT_FOUND)));
+    m_tabs.insert(std::make_pair(BUILD_WIN, Tab(BUILD_WIN, m_build_tab, images->Add(wxT("build")))));
     mgr->AddOutputTab(BUILD_WIN);
 
     // Find in files

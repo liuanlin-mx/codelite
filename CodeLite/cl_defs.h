@@ -56,6 +56,7 @@
 #endif
 // MSW / OSX and the rest of the world
 #define CL_USE_NATIVEBOOK 0
+#define CL_USE_AUINATIVEBOOK 0
 #endif
 
 // Allow override the default CL_USE_NATIVEBOOK by cmake variable (GTK only)
@@ -72,6 +73,17 @@
 #   define CL_USE_NATIVEBOOK 0
 #endif // GTK_USE_NATIVEBOOK
 #endif // __WXGTK__
+
+#ifdef USE_AUINATIVEBOOK
+#   ifdef CL_USE_NATIVEBOOK
+#       undef CL_USE_NATIVEBOOK
+#   endif
+#   define CL_USE_NATIVEBOOK 1
+#   ifdef CL_USE_AUINATIVEBOOK
+#       undef CL_USE_AUINATIVEBOOK
+#   endif
+#   define CL_USE_AUINATIVEBOOK 1
+#endif
 
 #define CL_USE_NEW_BUILD_TAB 1
 #define CL_N0_OF_BOOKMARK_TYPES 5

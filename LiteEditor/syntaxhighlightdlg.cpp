@@ -819,7 +819,7 @@ void SyntaxHighlightDlg::OnUseCustomBaseColour(wxCommandEvent& event)
 bool SyntaxHighlightDlg::IsRestartRequired() const { return false; }
 void SyntaxHighlightDlg::OnUseCustomBaseColourUI(wxUpdateUIEvent& event)
 {
-#if CL_USE_NATIVEBOOK
+#if CL_USE_NATIVEBOOK && !CL_USE_AUINATIVEBOOK
     event.Enable(false);
     event.Check(false);
 #else

@@ -21,6 +21,7 @@ cmake_minimum_required(VERSION 3.16)
 ##      -DAUTOGEN_REVISION=1|0                     // Should cmake generate makefiles that auto generates the autoversion.cpp file - default is 1               #
 ##      -DWITH_PCH=1|0                             // Enable Pre Compiled Header?                                                                               #
 ##      -DWITH_NATIVEBOOK=1|0                      // use native Notebook on GTK (otherwise, use the default custombook)                                        #
+##      -DWITH_AUINATIVEBOOK=1|0                   // use native AuiNotebook                                                                                    #
 ##      -DWITH_WXPATH=<fullpath>                   // Specify a particular wxWidgets build to use. The format must be /path/to/different_wx-config/directory/   #
 ##      -DMAKE_DEB=1|0                             // When set to 1, you can use make package to create .deb file for codelite                                  #
 ##      -DENABLE_SFTP=1|0                          // When set to 1 codelite is built with SFTP support. Default is build _with_ SFTP support                   #
@@ -357,16 +358,26 @@ if(UNIX AND NOT APPLE AND NOT MINGW)
         set(CL_GTK_USE_NATIVEBOOK 0)
     endif()
 
-    if(CL_GTK_USE_NATIVEBOOK MATCHES 1)
-        add_definitions( -DGTK_USE_NATIVEBOOK=1 )
-        message("-- Using Native Notebook class")
+    if (WITH_AUINATIVEBOOK MATCHES 1)
+        add_definitions( -DUSE_AUINATIVEBOOK=1 )
+        message("-- Using Native AuiNotebook class")
+    else()
+        if (CL_GTK_USE_NATIVEBOOK MATCHES 1)
+            add_definitions( -DGTK_USE_NATIVEBOOK=1 )
+            message("-- Using Native Notebook class")
+        else()
+            add_definitions( -DGTK_USE_NATIVEBOOK=0 )
+            message("-- Using custom Notebook")
+        endif()
+    endif()
+else() # NOT LINUX
+    if (WITH_AUINATIVEBOOK MATCHES 1)
+        add_definitions( -DUSE_AUINATIVEBOOK=1 )
+        message("-- Using Native AuiNotebook class")
     else()
         add_definitions( -DGTK_USE_NATIVEBOOK=0 )
         message("-- Using custom Notebook")
     endif()
-else() # NOT LINUX
-    add_definitions( -DGTK_USE_NATIVEBOOK=0 )
-    message("-- Using custom Notebook")
 endif()
 
 unset(CL_GTK_USE_NATIVEBOOK CACHE)

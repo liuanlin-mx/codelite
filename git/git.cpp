@@ -2625,14 +2625,16 @@ void GitPlugin::OnFolderStash(wxCommandEvent& event)
 {
     GitCmd::Vec_t commands;
     commands.push_back(GitCmd("stash", IProcessCreateDefault));
-    DoExecuteCommands(commands, m_selectedFolder);
+    wxString workingDirectory = m_selectedFolder.IsEmpty() ? m_repositoryDirectory : m_selectedFolder;
+    DoExecuteCommands(commands, workingDirectory);
 }
 
 void GitPlugin::OnFolderStashPop(wxCommandEvent& event)
 {
     GitCmd::Vec_t commands;
     commands.push_back(GitCmd("stash pop", IProcessCreateDefault));
-    DoExecuteCommands(commands, m_selectedFolder);
+    wxString workingDirectory = m_selectedFolder.IsEmpty() ? m_repositoryDirectory : m_selectedFolder;
+    DoExecuteCommands(commands, workingDirectory);
 }
 
 void GitPlugin::OnFolderGitBash(wxCommandEvent& event)

@@ -200,6 +200,10 @@ GitConsole::GitConsole(wxWindow* parent, GitPlugin* git)
     m_toolbar->AddTool(XRCID("git_push"), _("Push"), images->Add("up"), _("Push local changes"));
     m_toolbar->AddTool(XRCID("git_rebase"), _("Rebase"), images->Add("merge"), _("Rebase"), wxITEM_DROPDOWN);
     m_toolbar->AddSeparator();
+    m_toolbar->AddTool(XRCID("git_stash_folder"), _("Stash"), images->Add("down"), _("Stash"));
+    m_toolbar->AddTool(XRCID("git_stash_pop_folder"), _("Stash pop"), images->Add("up"), _("Stash pop"));
+    m_toolbar->AddSeparator();
+    
     m_toolbar->AddTool(XRCID("git_commit_diff"), _("Diffs"), images->Add("diff"), _("Show current diffs"));
     m_toolbar->AddTool(XRCID("git_browse_commit_list"), _("Log"), images->Add("tasks"), _("Browse commit history"));
     m_toolbar->AddTool(XRCID("git_blame"), _("Blame"), images->Add("finger"), _("Git blame"));

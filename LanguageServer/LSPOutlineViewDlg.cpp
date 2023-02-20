@@ -247,7 +247,11 @@ void LSPOutlineViewDlg::OnListKeyDown(wxKeyEvent& event)
 
 void LSPOutlineViewDlg::SetSymbols(const std::vector<SymbolInformation>& symbols)
 {
-    m_symbols = symbols;
+    if (symbols.empty()) {
+        m_symbols.clear();
+    } else {
+        m_symbols.insert(m_symbols.end(), symbols.begin(), symbols.end());
+    }
     DoInitialise();
 }
 

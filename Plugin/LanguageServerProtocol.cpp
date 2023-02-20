@@ -278,7 +278,6 @@ void LanguageServerProtocol::OnFunctionCallTip(clCodeCompletionEvent& event)
     IEditor* editor = GetEditor(event);
     CHECK_PTR_RET(editor);
     if(CanHandle(editor)) {
-        event.Skip(false);
         FunctionHelp(editor);
     }
 }
@@ -331,7 +330,6 @@ void LanguageServerProtocol::OnFindSymbolImpl(clCodeCompletionEvent& event)
 
     if(CanHandle(editor)) {
         // this event is ours to handle
-        event.Skip(false);
         FindImplementation(editor);
     }
 }
@@ -800,7 +798,6 @@ void LanguageServerProtocol::OnQuickOutline(clCodeCompletionEvent& event)
 
     if(CanHandle(editor) && IsDocumentSymbolsSupported()) {
         // this event is ours to handle
-        event.Skip(false);
         DocumentSymbols(editor, LSP::DocumentSymbolsRequest::CONTEXT_QUICK_OUTLINE |
                                     LSP::DocumentSymbolsRequest::CONTEXT_OUTLINE_VIEW);
         // dont wait for the response, but fire an event to load the dialog
@@ -983,7 +980,6 @@ void LanguageServerProtocol::OnWorkspaceSymbols(clCodeCompletionEvent& event)
     if(!CanHandle(workspace_file_type)) {
         return;
     }
-    event.Skip(false);
     SendWorkspaceSymbolsRequest(event.GetString());
 }
 

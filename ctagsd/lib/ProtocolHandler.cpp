@@ -1342,6 +1342,15 @@ void ProtocolHandler::on_hover(std::unique_ptr<JSON>&& msg, Channel::ptr_t chann
             tooltip << "```\n";
             tooltip << first_tag->GetTypename() << " " << first_tag->GetName() << "\n";
             tooltip << "```";
+        } else if (first_tag->IsMacro()) {
+            tooltip << "```\n";
+            wxString p = first_tag->GetPatternClean();
+            size_t pos = p.find(first_tag->GetName());
+            if (pos != p.npos) {
+                p = p.substr(0, pos);
+            }
+            tooltip << p << first_tag->GetName() << first_tag->GetSignature() << " " << first_tag->GetMacrodef() << "\n";
+            tooltip << "```";
         } else {
             tooltip << "```\n";
             tooltip << first_tag->GetPatternClean() << "\n";

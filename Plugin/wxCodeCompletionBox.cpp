@@ -149,7 +149,6 @@ void wxCodeCompletionBox::Reset(wxEvtHandler* eventObject, size_t flags)
     m_eventObject = eventObject;
     m_flags = flags;
     DoDestroyTipWindow();
-    m_allEntries.clear();
     m_startPos = wxNOT_FOUND;
     m_stc = nullptr;
     m_entries.clear();
@@ -159,7 +158,7 @@ void wxCodeCompletionBox::Reset(wxEvtHandler* eventObject, size_t flags)
 void wxCodeCompletionBox::ShowCompletionBox(wxStyledTextCtrl* ctrl, const wxCodeCompletionBoxEntry::Vec_t& entries)
 {
     m_stc = ctrl;
-    m_allEntries = entries;
+    m_allEntries.insert(m_allEntries.end(), entries.begin(), entries.end());
 
     // Keep the start position
     if(m_startPos == wxNOT_FOUND) {

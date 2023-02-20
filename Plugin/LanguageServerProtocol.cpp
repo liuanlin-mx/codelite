@@ -305,7 +305,7 @@ void LanguageServerProtocol::OnCodeComplete(clCodeCompletionEvent& event)
     }
 
     if(CanHandle(editor)) {
-        event.Skip(false);
+        event.Skip();
         CodeComplete(editor);
     }
 }

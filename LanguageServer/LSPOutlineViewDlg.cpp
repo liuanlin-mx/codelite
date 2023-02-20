@@ -269,7 +269,7 @@ void LSPOutlineViewDlg::DoSelectionActivate()
     LSP::Location loc = si->GetLocation();
     IEditor* active_editor = clGetManager()->GetActiveEditor();
     CHECK_PTR_RET(active_editor);
-
+    BrowseRecord jumpfrom = active_editor->CreateBrowseRecord();
     int sci_line = loc.GetRange().GetStart().GetLine();
     if(loc.GetRange().GetStart().GetLine() != loc.GetRange().GetEnd().GetLine()) {
         // different lines, don't select the entire function
@@ -282,5 +282,10 @@ void LSPOutlineViewDlg::DoSelectionActivate()
         active_editor->SelectRange(loc.GetRange());
         active_editor->CenterLinePreserveSelection(sci_line);
     }
+    BrowseRecord jumpto = active_editor->CreateBrowseRecord();
+    jumpto.lineno = sci_line;
+    jumpto.column = active_editor->GetColumnInChars(loc.GetRange().GetStart().GetCharacter());
+    
+    NavMgr::Get()->StoreCurrentLocation(jumpfrom, jumpto);
     Hide();
 }

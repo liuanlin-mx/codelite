@@ -1754,7 +1754,7 @@ clEditor* MainBook::OpenFileAsync(const wxString& file_name, std::function<void(
             m_book->SetSelection(index);
         }
     } else {
-        editor = OpenFile(real_path);
+        editor = OpenFile(file_name, wxEmptyString, wxNOT_FOUND, wxNOT_FOUND, OF_None);
         if(editor) {
             push_callback(std::move(callback), real_path);
         }

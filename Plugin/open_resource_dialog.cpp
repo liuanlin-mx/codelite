@@ -319,9 +319,13 @@ void OpenResourceDialog::OpenSelection(const OpenResourceDialogItemData& selecti
 
     clDEBUG() << "Opening editor:" << selection.m_file << ":" << selection.m_line << ":" << selection.m_column << endl;
 
+    IEditor *editor_ = manager->GetActiveEditor();
+    BrowseRecord jumpfrom = editor_ ? editor_->CreateBrowseRecord() : BrowseRecord();
     auto callback = [=](IEditor* editor) {
         editor->GetCtrl()->ClearSelections();
         editor->CenterLine(selection.m_line - 1, selection.m_column);
+        BrowseRecord jumpto = editor->CreateBrowseRecord();
+        NavMgr::Get()->StoreCurrentLocation(jumpfrom, jumpto);
     };
     clGetManager()->OpenFileAndAsyncExecute(selection.m_file, std::move(callback));
 }

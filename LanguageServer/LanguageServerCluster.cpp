@@ -248,7 +248,14 @@ void LanguageServerCluster::OnSymbolFound(LSPEvent& event)
             // try the range
             editor->SelectRange(location.GetRange());
         }
-        NavMgr::Get()->StoreCurrentLocation(from, editor->CreateBrowseRecord());
+        
+        BrowseRecord jumpto = editor->CreateBrowseRecord();
+        if (jumpto.lineno == 0 && location.GetRange().GetStart().GetLine() > 0) {
+            jumpto.lineno = location.GetRange().GetStart().GetLine();
+            jumpto.column = editor->GetColumnInChars(location.GetRange().GetStart().GetCharacter());
+        }
+
+        NavMgr::Get()->StoreCurrentLocation(from, jumpto);
     };
     clGetManager()->OpenFileAndAsyncExecute(fn.GetFullPath(), std::move(cb));
 }

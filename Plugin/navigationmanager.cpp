@@ -63,10 +63,22 @@ bool NavMgr::CanPrev() const { return !m_prevs.empty(); }
 
 void NavMgr::StoreCurrentLocation(const BrowseRecord& origin, const BrowseRecord& target)
 {
+    if (m_currentLocation.filename == target.filename && m_currentLocation.lineno == target.lineno)
+    {
+        m_currentLocation = target;
+        return;
+    }
+    
+    if (m_currentLocation.IsOk()) {
+        m_prevs.push(m_currentLocation);
+    }
+    
     if(m_prevs.empty() || !m_prevs.top().IsSameAs(origin)) {
         m_prevs.push(origin);
     }
     m_currentLocation = target;
+    
+    m_nexts = std::stack<BrowseRecord>();
 }
 
 bool NavMgr::NavigateBackward(IManager* mgr)

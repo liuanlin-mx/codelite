@@ -52,7 +52,7 @@ public:
 
     bool IsSameAs(const BrowseRecord& other) const
     {
-        return filename == other.filename && lineno == other.lineno;
+        return filename == other.filename && lineno == other.lineno && column == other.column;
     }
     
     /**

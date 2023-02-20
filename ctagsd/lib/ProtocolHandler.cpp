@@ -1416,7 +1416,15 @@ size_t ProtocolHandler::do_find_definition_tags(std::unique_ptr<JSON>&& msg, Cha
         }
     } else {
         std::vector<wxString> visible_scopes = update_additional_scopes_for_file(filepath);
-        m_completer->find_definition(filepath, line + 1, expression, text, visible_scopes, tags);
+        //m_completer->find_definition(filepath, line + 1, expression, text, visible_scopes, tags);
+        if (try_definition_first)
+        {
+            m_completer->find_impl(filepath, line + 1, expression, text, visible_scopes, tags);
+        }
+        else
+        {
+            m_completer->find_decl(filepath, line + 1, expression, text, visible_scopes, tags);
+        }
         clDEBUG() << " --> Match found:" << tags.size() << "matches" << endl;
         clDEBUG() << tags << endl;
     }

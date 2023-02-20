@@ -1617,6 +1617,118 @@ size_t CxxCodeCompletion::find_definition(const wxString& filepath, int line, co
     }
 }
 
+size_t CxxCodeCompletion::find_impl(const wxString& filepath, int line, const wxString& expression,
+                                          const wxString& text, const std::vector<wxString>& visible_scopes,
+                                          std::vector<TagEntryPtr>& matches)
+{
+    // ----------------------------------
+    // word completion
+    // ----------------------------------
+    std::vector<TagEntryPtr> candidates;
+
+    // first check if we are on a line
+    clDEBUG() << "find_definition(): calling word_complete(): is called for expression:" << expression << endl;
+    word_complete(filepath, line, expression, text, visible_scopes, true, candidates);
+    if(candidates.empty() || (candidates.size() == 1 && (candidates[0]->GetLine() == wxNOT_FOUND))) {
+        clDEBUG() << "Unable to complete, checking on the current lcoation" << endl;
+        candidates.clear();
+        m_lookup->GetTagsByFileAndLine(filepath, line, candidates);
+        if(candidates.empty()) {
+            return 0;
+        }
+        clDEBUG() << "find_definition(): on a tag:" << candidates[0]->GetFullDisplayName() << "."
+                  << candidates[0]->IsMethod() << endl;
+    }
+
+    // filter tags with no line numbers
+    std::vector<TagEntryPtr> good_tags;
+    TagEntryPtr first;
+    for(auto tag : candidates) {
+        if(tag->GetLine() != wxNOT_FOUND && !tag->GetFile().empty()) {
+            first = tag;
+            break;
+        }
+    }
+
+    if(!first) {
+        return 0;
+    }
+
+    if(first->IsMethod()) {
+        // we prefer the definition, unless we are already on it, and in that case, return the declaration
+        // locate both declaration + implementation
+        wxString path = first->GetPath();
+        std::vector<TagEntryPtr> impl_vec;
+        clDEBUG() << "Searching for path:" << path << endl;
+        m_lookup->GetTagsByPathAndKind(path, impl_vec, { "function" }, 100);
+
+        clDEBUG() << "impl:" << impl_vec.size() << endl;
+        
+        matches.swap(impl_vec);
+        return matches.size();
+    } else {
+        // no need to manipulate this tag
+        matches.push_back(first);
+        return matches.size();
+    }
+}
+
+size_t CxxCodeCompletion::find_decl(const wxString& filepath, int line, const wxString& expression,
+                                          const wxString& text, const std::vector<wxString>& visible_scopes,
+                                          std::vector<TagEntryPtr>& matches)
+{
+    // ----------------------------------
+    // word completion
+    // ----------------------------------
+    std::vector<TagEntryPtr> candidates;
+
+    // first check if we are on a line
+    clDEBUG() << "find_definition(): calling word_complete(): is called for expression:" << expression << endl;
+    word_complete(filepath, line, expression, text, visible_scopes, true, candidates);
+    if(candidates.empty() || (candidates.size() == 1 && (candidates[0]->GetLine() == wxNOT_FOUND))) {
+        clDEBUG() << "Unable to complete, checking on the current lcoation" << endl;
+        candidates.clear();
+        m_lookup->GetTagsByFileAndLine(filepath, line, candidates);
+        if(candidates.empty()) {
+            return 0;
+        }
+        clDEBUG() << "find_definition(): on a tag:" << candidates[0]->GetFullDisplayName() << "."
+                  << candidates[0]->IsMethod() << endl;
+    }
+
+    // filter tags with no line numbers
+    std::vector<TagEntryPtr> good_tags;
+    TagEntryPtr first;
+    for(auto tag : candidates) {
+        if(tag->GetLine() != wxNOT_FOUND && !tag->GetFile().empty()) {
+            first = tag;
+            break;
+        }
+    }
+
+    if(!first) {
+        return 0;
+    }
+
+    if(first->IsMethod()) {
+        // we prefer the definition, unless we are already on it, and in that case, return the declaration
+        // locate both declaration + implementation
+        wxString path = first->GetPath();
+        std::vector<TagEntryPtr> impl_vec;
+        std::vector<TagEntryPtr> decl_vec;
+        clDEBUG() << "Searching for path:" << path << endl;
+        m_lookup->GetTagsByPathAndKind(path, decl_vec, { "prototype" }, 100);
+
+        clDEBUG() << "decl:" << decl_vec.size() << endl;
+        matches.swap(decl_vec);
+        return matches.size();
+    } else {
+        // no need to manipulate this tag
+        matches.push_back(first);
+        return matches.size();
+    }
+}
+
 size_t CxxCodeCompletion::word_complete(const wxString& filepath, int line, const wxString& expression,
                                         const wxString& text, const std::vector<wxString>& visible_scopes,
                                         bool exact_match, std::vector<TagEntryPtr>& candidates,

@@ -26,28 +26,32 @@ void LSP::GotoDeclarationRequest::OnResponse(const LSP::ResponseMessage& respons
         return;
     }
 
-    LSP::Location loc;
+    std::vector<LSP::Location> locations;
     if(result.isArray()) {
-        loc.FromJSON(result.arrayItem(0));
+        int count = result.arraySize();
+        locations.reserve(count);
+        for(int i = 0; i < count; ++i) {
+            LSP::Location loc;
+            loc.FromJSON(result.arrayItem(i));
+            locations.emplace_back(loc);
+        }
     } else {
+        LSP::Location loc;
         loc.FromJSON(result);
+        locations.push_back(loc);
     }
 
-    clDEBUG1() << result.format() << endl;
-
-    if(!loc.GetPath().IsEmpty()) {
-        if(m_for_add_missing_header) {
-            LSPEvent event{ wxEVT_LSP_SYMBOL_DECLARATION_FOUND };
-            event.SetLocation(loc);
-            event.SetFileName(m_filename);
-            EventNotifier::Get()->AddPendingEvent(event);
-        } else {
-            // We send the same event for declaraion as we do for definition
-            LSPEvent event{ wxEVT_LSP_DEFINITION };
-            event.SetLocation(loc);
-            event.SetFileName(m_filename);
-            owner->AddPendingEvent(event);
-        }
+    if(locations.empty())
+        return;
+    if(m_for_add_missing_header) {
+        LSPEvent definitionEvent(wxEVT_LSP_SYMBOL_DECLARATION_FOUND);
+        definitionEvent.SetLocations(locations);
+        EventNotifier::Get()->AddPendingEvent(definitionEvent);
+    } else {
+        // Fire an event with the matching location
+        LSPEvent definitionEvent(wxEVT_LSP_DEFINITION);
+        definitionEvent.SetLocations(locations);
+        owner->AddPendingEvent(definitionEvent);
     }
 }
 

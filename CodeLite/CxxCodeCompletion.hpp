@@ -370,6 +370,10 @@ public:
 
     size_t find_definition(const wxString& filepath, int line, const wxString& expr, const wxString& text,
                            const std::vector<wxString>& visible_scopes, std::vector<TagEntryPtr>& matches);
+    size_t find_impl(const wxString& filepath, int line, const wxString& expr, const wxString& text,
+                           const std::vector<wxString>& visible_scopes, std::vector<TagEntryPtr>& matches);
+    size_t find_decl(const wxString& filepath, int line, const wxString& expr, const wxString& text,
+                           const std::vector<wxString>& visible_scopes, std::vector<TagEntryPtr>& matches);
 };
 
 #endif // CXXCODECOMPLETION_HPP

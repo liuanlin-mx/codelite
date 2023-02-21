@@ -18,6 +18,7 @@ public:
         STRIP_DEFAULT = 0,
         STRIP_NO_DEFAULT_VALUES = (1 << 0), // do not include the default value
         STRIP_NO_NAME = (1 << 1),           // do not include the function argument name
+        STRIP_NO_TYPEREF = (1 << 2),
     };
 
     enum eTruncateStyle {
@@ -35,12 +36,14 @@ public:
      * default values and removing the arguments name (both is configurable via `flags`)
      */
     wxString normalize_function(TagEntryPtr tag, size_t flags = CompletionHelper::STRIP_NO_DEFAULT_VALUES |
-                                                                CompletionHelper::STRIP_NO_NAME);
+                                                                CompletionHelper::STRIP_NO_NAME |
+                                                                CompletionHelper::STRIP_NO_TYPEREF);
     /**
      * @brief same as above
      */
     wxString normalize_function(const TagEntry* tag, size_t flags = CompletionHelper::STRIP_NO_DEFAULT_VALUES |
-                                                                    CompletionHelper::STRIP_NO_NAME);
+                                                                    CompletionHelper::STRIP_NO_NAME |
+                                                                    CompletionHelper::STRIP_NO_TYPEREF);
     wxString get_expression(const wxString& file_content, bool for_calltip, wxString* last_word = nullptr) const;
     wxString truncate_file_to_location(const wxString& file_content, size_t line, size_t column, size_t flags) const;
     std::vector<wxString> split_function_signature(const wxString& signature, wxString* return_value,

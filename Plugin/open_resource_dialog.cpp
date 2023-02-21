@@ -249,10 +249,22 @@ void OpenResourceDialog::DoPopulateTags(const std::vector<LSP::SymbolInformation
         }
 
         // keep the fullpath
-        DoAppendLine(symbol.GetName(), symbol.GetContainerName(), false,
-                     new OpenResourceDialogItemData(symbol.GetLocation().GetPath(),
+        OpenResourceDialogItemData *item = new OpenResourceDialogItemData(symbol.GetLocation().GetPath(),
                                                     symbol.GetLocation().GetRange().GetEnd().GetLine() + 1,
-                                                    wxEmptyString, symbol.GetName(), symbol.GetContainerName()),
+                                                    wxEmptyString, symbol.GetName(), symbol.GetContainerName());
+        item->m_impl = symbol.GetKind() == LSP::kSK_Property;
+        wxString fullname = symbol.GetContainerName();
+        if (symbol.GetKind() != LSP::kSK_File) {
+            
+            wxFileName fn(symbol.GetLocation().GetPath());
+            fullname.append(" @");
+            if(fn.GetDirCount()) {
+                fullname.append(fn.GetDirs().Last() + wxFileName::GetPathSeparator());
+            }
+            fullname.append(fn.GetFullName());
+            fullname.append(wxString::Format(":%d", symbol.GetLocation().GetRange().GetEnd().GetLine() + 1));
+        }
+        DoAppendLine(symbol.GetName(), fullname, false, item,
                      DoGetTagImg(symbol));
     }
 

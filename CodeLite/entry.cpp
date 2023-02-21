@@ -200,7 +200,28 @@ wxString TagEntry::Key() const
 wxString TagEntry::GetDisplayName() const
 {
     wxString name;
-    name << GetName() << GetSignature();
+    if (!GetTypename().empty()) {
+        wxString typeName = GetTypename();
+        if (is_func_virtual()) {
+            typeName.Prepend("virtual ");
+        }
+        if (is_func_inline()) {
+            typeName.Prepend("inline ");
+        }
+        wxString properties;
+        if (is_func_pure()) {
+            properties.Append(" = 0");
+        }
+        if (is_func_deleted()) {
+            properties.Append(" = delete");
+        }
+        if (is_func_override()) {
+            properties.Append(" override");
+        }
+        name << GetName() << GetSignature() << properties << " -> " << typeName;
+    } else {
+        name << GetName() << GetSignature();
+    }
     return name;
 }
 
@@ -211,7 +232,7 @@ wxString TagEntry::GetFullDisplayName() const
     if(GetParent() == "<global>") {
         name << GetDisplayName();
     } else {
-        name << GetParent() << "::" << GetName() << GetSignature();
+        name << GetParent() << "::" << GetDisplayName();
     }
 
     return name;
@@ -641,7 +662,7 @@ wxString TagEntry::GetFunctionDefinition() const
     }
 
     CompletionHelper helper;
-    impl << helper.normalize_function(this, CompletionHelper::STRIP_NO_DEFAULT_VALUES);
+    impl << helper.normalize_function(this, CompletionHelper::STRIP_NO_DEFAULT_VALUES | CompletionHelper::STRIP_NO_TYPEREF);
     // release the pointer from the smart-ptr
     // this ensure that `this` is not deleted
     return impl;

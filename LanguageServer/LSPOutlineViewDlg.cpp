@@ -99,6 +99,8 @@ void LSPOutlineViewDlg::DoInitialise()
         case kSK_Function:
         case kSK_Constructor:
             builder.Add(FUNCTION_SYMBOL + " ", eAsciiColours::NORMAL_TEXT);
+            builder.Add(si.GetName(), function_colour);
+        #if 0
             if(si.GetName().Contains("(") && si.GetName().Contains(")")) {
                 // the name also has the signature
                 wxString signature = si.GetName().AfterFirst('(');
@@ -112,6 +114,7 @@ void LSPOutlineViewDlg::DoInitialise()
                 builder.Add(si.GetName(), function_colour);
                 builder.Add("()", operator_colour);
             }
+        #endif
             break;
         case kSK_TypeParameter: // define
         case kSK_EnumMember:

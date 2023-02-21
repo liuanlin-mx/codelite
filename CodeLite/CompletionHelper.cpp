@@ -960,10 +960,15 @@ wxString CompletionHelper::normalize_function(const TagEntry* tag, size_t flags)
 {
     wxString return_value;
     wxString fullname;
-
+    
+    wxString typeref = tag->GetTypename();
     wxString name = tag->GetName();
     wxString signature = tag->GetSignature();
-    fullname << name << "(";
+    if (!(flags & CompletionHelper::STRIP_NO_TYPEREF) && !typeref.empty()) {
+        fullname << typeref << " " << name << "(";
+    } else {
+        fullname << name << "(";
+    }
     std::vector<wxString> args = split_function_signature(signature, &return_value, flags);
     wxString funcsig;
     for(const wxString& arg : args) {

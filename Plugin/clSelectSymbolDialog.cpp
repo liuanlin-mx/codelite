@@ -28,6 +28,7 @@ void clSelectSymbolDialog::AddSymbol(const wxString& name, const wxBitmap& bmp, 
     wxVector<wxVariant> cols;
     wxUnusedVar(help);
     cols.push_back(::MakeIconText(name, bmp));
+    cols.push_back(help);
     m_dvListCtrl->AppendItem(cols, (wxUIntPtr)clientData);
 }
 

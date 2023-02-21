@@ -39,6 +39,9 @@ clSelectSymbolDialogBase::clSelectSymbolDialogBase(wxWindow* parent, wxWindowID 
 
     m_dvListCtrl->AppendIconTextColumn(_("Name"), wxDATAVIEW_CELL_INERT, WXC_FROM_DIP(-2), wxALIGN_LEFT,
                                        wxDATAVIEW_COL_RESIZABLE);
+    m_dvListCtrl->AppendIconTextColumn(_("Help"), wxDATAVIEW_CELL_INERT, WXC_FROM_DIP(-2), wxALIGN_LEFT,
+                                       wxDATAVIEW_COL_RESIZABLE);
+                                       
     m_stdBtnSizer4 = new wxStdDialogButtonSizer();
 
     boxSizer2->Add(m_stdBtnSizer4, 0, wxALL | wxALIGN_CENTER_HORIZONTAL, WXC_FROM_DIP(5));

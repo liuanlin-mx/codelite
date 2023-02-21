@@ -209,6 +209,13 @@ void LanguageServerCluster::OnSymbolFound(LSPEvent& event)
             entries.emplace_back();
             auto& entry = entries.back();
             entry.name = loc.GetPattern();
+            
+            wxFileName fn(loc.GetPath());
+            if(fn.GetDirCount()) {
+                entry.help.append(fn.GetDirs().Last() + wxFileName::GetPathSeparator());
+            }
+            entry.help.append(fn.GetFullName());
+            entry.help.append(wxString::Format(":%d", loc.GetRange().GetStart().GetLine() + 1));
             entry.clientData = new SymbolClientData(loc);
         }
 
